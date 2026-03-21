@@ -22,3 +22,10 @@ export type UserCreateInput = z.infer<typeof UserCreateSchema>;
 export const UserPublicSchema = UserSchema.omit({ password: true });
 
 export type UserPublic = z.infer<typeof UserPublicSchema>;
+
+export const UserSignInSchema = z.object({
+	email: z.email(),
+	password: z.string().min(6),
+});
+
+export type UserSignInInput = z.infer<typeof UserSignInSchema>;
