@@ -4,6 +4,28 @@ import { redis } from "../lib/redis";
 const MAX_REQUESTS = Number(process.env.RATE_LIMIT_MAX ?? 60);
 const WINDOW_SECONDS = Number(process.env.RATE_LIMIT_WINDOW_SECONDS ?? 60);
 
+function getClientKey(req: Request): string {
+	if (req.auth?.sub) {
+		return `user:${req.auth.sub}`;
+	}
+
+	const forwardedFor = req.headers["x-forwarded-for"];
+	if (typeof forwardedFor === "string" && forwardedFor.length > 0) {
+		const first = forwardedFor.split(",")[0]?.trim();
+		if (first) {
+			return `ip:${first}`;
+		}
+	}
+
+	const realIp = req.headers["x-real-ip"];
+	if (typeof realIp === "string" && realIp.length > 0) {
+		return `ip:${realIp.trim()}`;
+	}
+
+	const ip = req.ip || req.socket.remoteAddress || "unknown";
+	return `ip:${ip}`;
+}
+
 export async function redisRateLimit(
 	req: Request,
 	res: Response,
@@ -13,8 +35,8 @@ export async function redisRateLimit(
 		return next();
 	}
 
-	const ip = req.ip || req.socket.remoteAddress || "unknown";
-	const key = `rate_limit:${ip}`;
+	const clientKey = getClientKey(req);
+	const key = `rate_limit:${clientKey}`;
 
 	try {
 		const count = await redis.incr(key);

@@ -14,7 +14,7 @@ import productRouter from "./routers/product";
 const PORT = Number(process.env.PORT || 3000);
 
 const app = express();
-app.set("trust proxy", 1);
+app.set("trust proxy", true);
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
