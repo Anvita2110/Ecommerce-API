@@ -8,12 +8,16 @@ import express, {
 } from "express";
 import morgan from "morgan";
 import userRouter from "./routers/user";
+import productRouter from "./routers/product";
+
+const PORT = Number(process.env.PORT || 3000);
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use("/users", userRouter);
+app.use("/products", productRouter);
 
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
 	if (error instanceof PrismaClientKnownRequestError) {
@@ -35,6 +39,10 @@ app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
 	res.status(500).json({ message: "Internal server error" });
 });
 
-app.listen(3000, () => {
-	console.log("Server is running on port 3000");
+app.get("/", (_req, res) => {
+	res.send("Ecommerce API is running");
+});
+
+app.listen(PORT, () => {
+	console.log(`Server is running on port ${PORT}`);
 });
