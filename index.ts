@@ -7,15 +7,18 @@ import express, {
 	type Response,
 } from "express";
 import morgan from "morgan";
+import redisRateLimit from "./middlewares/rate-limit";
 import userRouter from "./routers/user";
 import productRouter from "./routers/product";
 
 const PORT = Number(process.env.PORT || 3000);
 
 const app = express();
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
+app.use(redisRateLimit);
 app.use("/users", userRouter);
 app.use("/products", productRouter);
 
