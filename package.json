@@ -4,7 +4,6 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
-		"postinstall": "prisma generate",
 		"dev": "bun run --watch index.ts",
 		"build": "bun build index.ts --target bun --outdir dist",
 		"start": "bun run dist/index.js",
