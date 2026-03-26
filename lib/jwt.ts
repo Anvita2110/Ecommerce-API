@@ -1,7 +1,6 @@
 import type { CookieOptions } from "express";
 import jwt, { type JwtPayload, type SignOptions } from "jsonwebtoken";
 
-/** Cookie name for the JWT (readable by `cookie-parser`). */
 export const ACCESS_TOKEN_COOKIE_NAME =
 	process.env.ACCESS_TOKEN_COOKIE_NAME ?? "access_token";
 
@@ -20,7 +19,7 @@ function getSecret(): string {
 
 export function signAccessToken(payload: AccessTokenPayload): string {
 	const options: SignOptions = {
-		expiresIn: (process.env.JWT_EXPIRES_IN ?? "7d") as SignOptions["expiresIn"],
+		expiresIn: (process.env.JWT_EXPIRES_IN ?? "1d") as SignOptions["expiresIn"],
 	};
 	return jwt.sign(
 		{ sub: payload.sub, email: payload.email },
