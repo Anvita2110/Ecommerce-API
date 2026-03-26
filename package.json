@@ -10,7 +10,10 @@
 		"start": "bun run dist/index.js",
 		"format": "biome format --write",
 		"lint": "biome lint --write",
-		"type-check": "biome check --write"
+		"type-check": "biome check --write",
+		"format:check": "biome format .",
+		"lint:check": "biome lint .",
+		"types:check": "tsc --noEmit"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.8",
